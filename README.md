@@ -40,4 +40,9 @@ git push -u origin main
 
 ## Deploy via Firebase Hosting
 
-Configure no GitHub o secret `FIREBASE_SERVICE_ACCOUNT` com a service account do Firebase e ajuste o `projectId` no workflow.
+Configure no GitHub os secrets:
+
+- `FIREBASE_PROJECT_ID`: ID do projeto Firebase.
+- `FIREBASE_SERVICE_ACCOUNT`: JSON completo da service account do Firebase.
+
+O workflow publica o Firebase Hosting e também as regras/indexes do Firestore.
