@@ -757,6 +757,30 @@ tr:last-child td {
   gap: 10px;
 }
 
+.record-card.selected-card {
+  border-color: var(--brand);
+  box-shadow: 0 12px 24px rgba(36, 70, 177, 0.14);
+}
+
+.edit-banner {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border: 1px solid #c8d6ff;
+  border-radius: 8px;
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  font-weight: 700;
+}
+
+.form-actions {
+  align-self: end;
+}
+
+.form-actions .primary-btn,
+.form-actions .ghost-btn {
+  min-width: 190px;
+}
+
 .record-card h3 {
   margin: 0;
   font-size: 1.02rem;

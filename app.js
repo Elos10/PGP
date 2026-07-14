@@ -815,35 +815,33 @@ function dashboard() {
 }
 
 function unitsView() {
+  const editingUnit = state.editing?.scope === "units"
+    ? state.units.find((unit) => unit.id === state.editing.itemId)
+    : null;
   return layout("Unidades escolares", "Cadastro das escolas com região, modalidade, turnos e número de salas.", `
     <section class="panel">
-      <form class="form-grid" onsubmit="addUnit(event)">
-        ${input("Código", "code", "001")}
-        ${input("Nome", "name", "Escola Municipal", "span-2")}
-        ${input("Região", "region", "Norte")}
-        ${input("Modalidade", "modality", "Ensino Fundamental")}
-        ${input("Turnos", "shifts", "Manhã/Tarde")}
-        ${input("Número de salas", "rooms", "18", "", "number")}
-        <button class="primary-btn" type="submit">Adicionar unidade</button>
+      ${editingUnit ? `<div class="edit-banner">Editando unidade: <strong>${editingUnit.code} - ${editingUnit.name}</strong></div>` : ""}
+      <form class="form-grid" onsubmit="${editingUnit ? `updateItem(event,'units','${editingUnit.id}', ['rooms'])` : "addUnit(event)"}">
+        ${editingUnit ? editInput("Código", "code", editingUnit.code) : input("Código", "code", "001")}
+        ${editingUnit ? editInput("Nome", "name", editingUnit.name, "span-2") : input("Nome", "name", "Escola Municipal", "span-2")}
+        ${editingUnit ? editInput("Região", "region", editingUnit.region) : input("Região", "region", "Norte")}
+        ${editingUnit ? editInput("Modalidade", "modality", editingUnit.modality) : input("Modalidade", "modality", "Ensino Fundamental")}
+        ${editingUnit ? editInput("Turnos", "shifts", editingUnit.shifts) : input("Turnos", "shifts", "Manhã/Tarde")}
+        ${editingUnit ? editInput("Número de salas", "rooms", editingUnit.rooms, "", "number") : input("Número de salas", "rooms", "18", "", "number")}
+        <div class="actions form-actions">
+          <button class="primary-btn" type="submit">${editingUnit ? "Salvar alterações" : "Adicionar unidade"}</button>
+          ${editingUnit ? `<button class="ghost-btn" type="button" onclick="cancelEdit()">Cancelar edição</button>` : ""}
+        </div>
       </form>
       <div class="cards">
         ${state.units.map((unit) => `
-          <article class="record-card">
-            ${isEditing("units", unit.id) ? `
-              <form class="form-grid" onsubmit="updateItem(event,'units','${unit.id}', ['rooms'])">
-                ${editInput("Código", "code", unit.code)}
-                ${editInput("Nome", "name", unit.name, "span-2")}
-                ${editInput("Região", "region", unit.region)}
-                ${editInput("Modalidade", "modality", unit.modality)}
-                ${editInput("Turnos", "shifts", unit.shifts)}
-                ${editInput("Número de salas", "rooms", unit.rooms, "", "number")}
-                <div class="actions"><button class="primary-btn" type="submit">Salvar</button><button class="ghost-btn" type="button" onclick="cancelEdit()">Cancelar</button></div>
-              </form>
-            ` : `
-              <h3>${unit.code} - ${unit.name}</h3>
-              <div class="meta">Região: ${unit.region}<br />Modalidade: ${unit.modality}<br />Turnos: ${unit.shifts}<br />Salas: ${unit.rooms}</div>
-              <div class="actions"><button class="ghost-btn" onclick="startEdit('units','${unit.id}')">Editar</button><button class="danger-btn" onclick="removeItem('units','${unit.id}')">Excluir</button></div>
-            `}
+          <article class="record-card ${isEditing("units", unit.id) ? "selected-card" : ""}">
+            <h3>${unit.code} - ${unit.name}</h3>
+            <div class="meta">Região: ${unit.region}<br />Modalidade: ${unit.modality}<br />Turnos: ${unit.shifts}<br />Salas: ${unit.rooms}</div>
+            <div class="actions">
+              <button class="ghost-btn" onclick="startEdit('units','${unit.id}')">${isEditing("units", unit.id) ? "Em edição" : "Editar"}</button>
+              <button class="danger-btn" onclick="removeItem('units','${unit.id}')">Excluir</button>
+            </div>
           </article>
         `).join("")}
       </div>
