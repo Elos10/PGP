@@ -1,0 +1,28 @@
+# Sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs locais
+*.log
+server.out.log
+server.err.log
+
+# Cópias antigas/aninhadas
+PGP SEMED/
+
+# Dependências e builds, se forem adicionados no futuro
+node_modules/
+dist/
+build/
+
+# Firebase local
+.firebase/
+firebase-debug.log
+ui-debug.log
+
+# Ambientes locais
+.env
+.env.*
+!.env.example
