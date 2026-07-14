@@ -1,4 +1,3 @@
-const STORAGE_KEY = "pgp-semed-professores-v1";
 const FIREBASE_SDK_VERSION = "10.12.5";
 
 let remotePersistence = {
@@ -107,13 +106,7 @@ function clone(value) {
 }
 
 function loadState() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (!stored) return normalizeState(clone(defaultState));
-  try {
-    return normalizeState({ ...clone(defaultState), ...JSON.parse(stored) });
-  } catch {
-    return normalizeState(clone(defaultState));
-  }
+  return normalizeState(clone(defaultState));
 }
 
 function normalizeState(value) {
@@ -139,7 +132,6 @@ function subjectsFromMatrix(matrix) {
 }
 
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   scheduleRemoteSave();
 }
 
@@ -152,9 +144,7 @@ function dataStateForRemote() {
 
 function isFirebaseConfigured() {
   const config = window.PGP_FIREBASE_CONFIG;
-  const options = window.PGP_FIREBASE_OPTIONS;
   return Boolean(
-    options?.enabled &&
     config?.apiKey &&
     config?.projectId &&
     !String(config.apiKey).includes("PREENCHA") &&
@@ -163,7 +153,12 @@ function isFirebaseConfigured() {
 }
 
 async function initRemotePersistence() {
-  if (!isFirebaseConfigured() || remotePersistence.loading || remotePersistence.ready) return;
+  if (remotePersistence.loading || remotePersistence.ready) return;
+  if (!isFirebaseConfigured()) {
+    remotePersistence.error = "Firebase não configurado.";
+    render();
+    return;
+  }
   remotePersistence.loading = true;
   try {
     const [{ initializeApp }, authModule, firestore] = await Promise.all([
@@ -192,8 +187,9 @@ async function initRemotePersistence() {
     await loadRemoteState();
   } catch (error) {
     remotePersistence.loading = false;
-    remotePersistence.error = "Firebase indisponível. Usando armazenamento local.";
+    remotePersistence.error = "Firebase indisponível.";
     console.warn(remotePersistence.error, error);
+    render();
   }
 }
 
@@ -210,7 +206,6 @@ async function loadRemoteState() {
     const session = state.session;
     const editing = {};
     state = normalizeState({ ...clone(defaultState), ...remoteData, session, editing });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     render();
   } catch (error) {
     remotePersistence.error = "Não foi possível carregar os dados do Firebase.";
@@ -358,8 +353,8 @@ function canAccess(view) {
 function persistenceStatus() {
   if (remotePersistence.ready) return "Firebase conectado";
   if (remotePersistence.loading) return "Conectando Firebase";
-  if (remotePersistence.error) return "Firebase local";
-  return "Armazenamento local";
+  if (remotePersistence.error) return "Firebase pendente";
+  return "Firebase";
 }
 
 function subjectNeeds() {

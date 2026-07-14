@@ -2,11 +2,7 @@
 
 Sistema web para controle de necessidade de professores, matriz curricular, distribuição de aulas, equidade, movimentações e perfis de acesso.
 
-## Executar localmente
-
-Abra `index.html` no navegador ou sirva a pasta com um servidor estático.
-
-Credenciais de demonstração:
+## Acesso de demonstração
 
 - Usuário: `admin@semed.local`
 - Senha: `Admin@123`
@@ -16,12 +12,10 @@ Credenciais de demonstração:
 1. Crie um projeto no Firebase.
 2. Ative o Cloud Firestore.
 3. Ative o provedor de autenticação `Anonymous` em Authentication.
-4. Copie `firebase-config.example.js` para `firebase-config.js`.
-5. Preencha os dados do app web Firebase em `firebase-config.js`.
-6. Altere `enabled` para `true`.
-7. Publique as regras com o Firebase CLI quando estiver autenticado.
+4. Cadastre os secrets do GitHub listados abaixo.
+5. Faça push para a branch `main`.
 
-Enquanto o Firebase não estiver habilitado, o sistema usa armazenamento local do navegador.
+O arquivo `firebase-config.js` é gerado automaticamente pelo GitHub Actions durante o deploy e não deve ser versionado.
 
 ## GitHub
 
@@ -44,5 +38,8 @@ Configure no GitHub os secrets:
 
 - `FIREBASE_PROJECT_ID`: ID do projeto Firebase.
 - `FIREBASE_SERVICE_ACCOUNT`: JSON completo da service account do Firebase.
+- `FIREBASE_API_KEY`: API key do app web Firebase.
+- `FIREBASE_APP_ID`: app ID do app web Firebase.
+- `FIREBASE_MESSAGING_SENDER_ID`: messaging sender ID do app web Firebase.
 
 O workflow publica o Firebase Hosting e também as regras/indexes do Firestore.

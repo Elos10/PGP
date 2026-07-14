@@ -21,6 +21,7 @@ build/
 .firebase/
 firebase-debug.log
 ui-debug.log
+firebase-config.js
 
 # Ambientes locais
 .env
