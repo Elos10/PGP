@@ -475,14 +475,6 @@ function logout() {
   render();
 }
 
-function resetDemo() {
-  if (!confirm("Restaurar a base de demonstração? Os cadastros atuais serão substituídos.")) return;
-  state = clone(defaultState);
-  state.session = { user: "Administrador PGP", userId: "user1", profileId: "perfil1", at: new Date().toISOString() };
-  saveState();
-  render();
-}
-
 function removeItem(type, itemId) {
   if (!confirm("Confirmar exclusão deste registro?")) return;
   state[type] = state[type].filter((item) => item.id !== itemId);
@@ -705,7 +697,6 @@ function layout(title, subtitle, content, options = {}) {
         </nav>
         <div class="sidebar-footer">
           <span>${state.session?.user || ""}<br />${profileName(state.session?.profileId)}<br />${persistenceStatus()}</span>
-          <button class="ghost-btn" onclick="resetDemo()">Restaurar demo</button>
           <button class="danger-btn" onclick="logout()">Sair</button>
         </div>
       </aside>
